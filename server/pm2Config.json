@@ -1,0 +1,8 @@
+{
+    "apps": [{
+        "name": "setupServer",
+        "script": "./server.py",
+        "instances": "1",
+        "interpreter": "./venv/bin/python3.8"
+    }]
+}

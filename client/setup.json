@@ -1,0 +1,6 @@
+{
+    "sshKey": "~/.ssh/keyID_rsa",
+    "serverSCPInfo": "example@20.18.10.42:/home/SUDO_USER",
+    "serverName": "https://example.com",
+    "wildCardDomain": "abc.example.com"
+}
