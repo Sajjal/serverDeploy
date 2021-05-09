@@ -8,13 +8,13 @@
 
 ### Thank you for exploring S & D serverDeploy.
 
-It is a lightweight CLI application that can deploy and configure **Node.js** based web application in the remote server *(Similar to `Vercel`)*. This application is developed using Python 3 and Flask.
+It is a lightweight CLI application that can deploy and configure **Node.js** based web application in the remote server _(Similar to `Vercel`)_. This application is developed using Python 3 and Flask.
 
 ---
 
 ## Background (_Why this application was developed?_)
 
-I've just started learning Python and it seems fun. Learning without doing is not effective. Therefore, I was thinking to do some project in Python but I was in short of ideas. Being a web developer myself, I need to frequently create and update web apps in remote server. The work pattern is similar in most projects and it is somewhat time consuming. So, I decided to automate this process using Python and here it is.  
+I've just started learning Python and it seems fun. Learning without doing is not effective. Therefore, I was thinking to do some project in Python but I was in short of ideas. Being a web developer myself, I need to frequently create and update web apps in remote server. The work pattern is similar in most projects and it is somewhat time consuming. So, I decided to automate this process using Python and here it is.
 
 ## Prerequisites:
 
@@ -29,7 +29,7 @@ I've just started learning Python and it seems fun. Learning without doing is no
 
 - Obtain a Domain Name of your choice from any Domain name registrar
 - Point the A record of your Domain to your server's public IP address
-- Create a Wild-Card sub-domain (*) and Point the A record of your sub-domain to your server's public IP address
+- Create a Wild-Card sub-domain (\*) and Point the A record of your sub-domain to your server's public IP address
 - Configure Reverse Proxy on Apache2 and forward your Domain to port 5000
 
 ### Python:
@@ -57,7 +57,7 @@ I've just started learning Python and it seems fun. Learning without doing is no
         - npm install pm2@latest -g
 
         - pip3 install virtualenv
-        
+
         - virtualenv venv
 
         - source venv/bin/activate
@@ -71,6 +71,7 @@ I've just started learning Python and it seems fun. Learning without doing is no
 > **Important:** Replace `SUDO_USER` with the username you created earlier (`See Prerequisites`).
 
 ---
+
 ### Client Setup:
 
 - Copy the `client` directory to `~/serverDeploy/` on your local computer
@@ -94,7 +95,7 @@ I've just started learning Python and it seems fun. Learning without doing is no
 
 - Type `source ~/.zshrc` OR `source ~/.bash_profile` in the terminal and restart the terminal
 
-- You must have `port=process.env.PORT` in your **Node.js** based Web Application 
+- You must have `port=process.env.PORT` in your **Node.js** based Web Application
 
 - **cd** to your **Node.js** based Web Application project directory and type `serverDeploy`
 
@@ -112,7 +113,7 @@ I've just started learning Python and it seems fun. Learning without doing is no
 
 ## CLI Options:
 
-<img src="https://github.com/Sajjal/serverDeploy/blob/master/client/screenShots/CLI.png">
+<img src="https://github.com/Sajjal/serverDeploy/blob/master/client/screenShots/options.png">
 
 ---
 

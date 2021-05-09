@@ -30,3 +30,13 @@ class ManageProjectList:
 
         dataList.append(data)
         self.writeRecord(dataList)
+
+    def removeRecord(self, name):
+        projectList = json.loads(self.readRecord())
+        newList = []
+        if(projectList):
+            for data in projectList:
+                if data["name"] != name:
+                    newList.append(data)
+
+            self.writeRecord(newList)

@@ -110,5 +110,47 @@ def update():
         return {"ERROR": 'Unable to Authenticate!'}
 
 
+@app.route('/remove', methods=['POST'])
+def remove():
+    clientPass = request.json['passCode']
+    projectName = request.json['name']
+
+    if(authenticate(clientPass)):
+        try:
+            projectInfo = json.loads(projectRecord.readRecord())
+        except:
+            projectInfo = None
+            return {"ERROR": 'Project Not found in Server!'}
+        if projectInfo:
+            for project in projectInfo:
+                if project["name"] == projectName:
+                    currentProject = ManageApp(
+                        projectName, project["domain"], project["port"], '')
+                    try:
+                        currentProject.removeFiles()
+                    except:
+                        return {"ERROR": 'Unable to Project Files in Server!'}
+                    try:
+                        currentProject.removePM2Instance()
+                    except:
+                        return {"ERROR": 'Unable to Restart PM2 instance in Server!'}
+                    try:
+                        currentProject.removeConf()
+                    except:
+                        return {"ERROR": 'Unable to Remove Apache and Certbot Conf in Server!'}
+                    try:
+                        projectRecord.removeRecord(projectName)
+                    except:
+                        return {"ERROR": 'Unable to Remove Project Record in Server!'}
+
+                    return {"Success": f"{projectName} is Removed"}
+
+            return {"ERROR": 'Project Not found in Server!'}
+        else:
+            return {"ERROR": 'Project Not found in Server!'}
+    else:
+        return {"ERROR": 'Unable to Authenticate!'}
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

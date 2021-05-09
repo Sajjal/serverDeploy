@@ -79,3 +79,17 @@ class ManageApp:
         os.system(
             f'sudo a2ensite {self.domain}.conf && sudo service apache2 reload && sudo certbot --apache -n  --redirect -d {self.domain}')
         return
+
+    def removeFiles(self):
+        os.system(f'cd {self.destination}/ && rm -rf {self.projectName}')
+        return
+
+    def removePM2Instance(self):
+        os.system(
+            f'pm2 stop {self.projectName} && pm2 delete {self.projectName} && pm2 save')
+        return
+
+    def removeConf(self):
+        os.system(
+            f'cd /etc/apache2/sites-available/ && sudo rm {self.domain}.conf && sudo rm {self.domain}-le-ssl.conf && sudo certbot delete --cert-name {self.domain} && sudo a2dissite {self.domain} && sudo service apache2 reload')
+        return
