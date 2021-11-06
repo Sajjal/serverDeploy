@@ -1,5 +1,6 @@
 import os
 import json
+import tarfile
 
 
 def readSetupFile(fileName):
@@ -34,6 +35,7 @@ class ManageApp:
         self.domain = domain
         self.port = port
         self.mainFile = mainFile
+        self.exclude_files = [f"{projectName}/node_modules"]
 
     def moveAndUnzip(self):
         os.system(
@@ -78,6 +80,21 @@ class ManageApp:
     def activateDomain(self):
         os.system(
             f'sudo a2ensite {self.domain}.conf && sudo service apache2 reload && sudo certbot --apache -n  --redirect -d {self.domain}')
+        return
+
+    def filter_function(self, tarinfo):
+        filename = tarinfo.name
+        return None if filename in self.exclude_files or os.path.splitext(filename)[1] in self.exclude_files else tarinfo
+
+    def compress(self):
+        tar = tarfile.open(f"{self.destination}/{self.projectName}.tar.gz", "w:gz")
+        tar.add(f"{self.destination}/{self.projectName}",
+                arcname=self.projectName, filter=self.filter_function)
+        tar.close()
+        return f"{self.destination}/{self.projectName}.tar.gz"
+
+    def removeArchive(self):
+        os.system(f'rm {self.destination}/{self.projectName}.tar.gz')
         return
 
     def removeFiles(self):

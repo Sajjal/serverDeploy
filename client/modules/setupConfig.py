@@ -48,8 +48,13 @@ class SetupConfig:
 
         while(self.repeat):
             try:
-                option = int(input('\n'+colors.GREEN + '***** S & D serverDeploy *****' + colors.ENDC + '\n' + '\n'+'1. Create New Project' + '\n' +
-                                   '2. Update Existing Project' + '\n' + '3. Remove Existing Project' + '\n' + '4. Terminate Program' + '\n\n' + colors.GREEN + '*********** OPTION ***********' + colors.ENDC + '\t'))
+                option = int(
+                    input(
+                        '\n' + colors.GREEN + '***** S & D serverDeploy *****' + colors.ENDC + '\n' + '\n' +
+                        '1. Create New Project' + '\n' + '2. Update Existing Project' + '\n' +
+                        '3. Download Existing Project' + '\n' + '4. Remove Existing Project' + '\n' +
+                        '5. Terminate Program' + '\n\n' + colors.GREEN + '*********** OPTION ***********' + colors.ENDC +
+                        '\t'))
 
                 if(option == 1):
                     self.status == self.projectName == self.domainName == None
@@ -71,19 +76,29 @@ class SetupConfig:
                         self.repeat = False
 
                 elif(option == 3):
-                    confirm = input(
-                        '\n' + colors.YELLOW + 'WARN: This will Permanently remove the Project. Continue? y/n  ' + colors.ENDC)
+                    name = input('\n' + 'Project Name (no space please)? ')
+                    if ((' ' in name) == True or not name):
+                        print('\n'+colors.RED +
+                              'ERROR: Invalid Project Name' + colors.ENDC+'\n')
+                    else:
+                        status = {"name": name, "type": 3}
+                        print('\n'+'Checking with Server...' + '\n')
+                        self.repeat = False
+
+                elif(option == 4):
+                    confirm = input('\n' + colors.YELLOW +
+                                    'WARN: This will Permanently remove the Project. Continue? y/n  ' + colors.ENDC)
                     if(confirm == 'y' or confirm == 'Y'):
                         name = input('\n' + 'Project Name (no space please)? ')
                         if ((' ' in name) == True or not name):
                             print('\n'+colors.RED +
                                   'ERROR: Invalid Project Name' + colors.ENDC+'\n')
                         else:
-                            status = {"name": name, "type": 3}
+                            status = {"name": name, "type": 4}
                             print('\n'+'Checking with Server...' + '\n')
                             self.repeat = False
 
-                elif(option == 4):
+                elif(option == 5):
                     self.repeat = False
                     print(
                         '\n'+colors.YELLOW + 'Program Closed!' + colors.ENDC + '\n')

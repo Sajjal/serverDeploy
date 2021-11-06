@@ -1,4 +1,6 @@
 import json
+import threading
+from time import time, sleep
 from flask import Flask, request
 
 from modules.readWriteProjectList import ManageProjectList
@@ -16,6 +18,17 @@ def getPort():
     except:
         port = 3000
     return port
+
+
+temp_obj = None
+
+
+def waitAndDelete():
+    sleep(60 - time() % 60)
+    try:
+        temp_obj.removeArchive()
+    except:
+        pass
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -102,6 +115,42 @@ def update():
                         return {"ERROR": 'Unable to Restart PM2 instance in Server!'}
 
                     return {"Success": f"{projectName} is Updated"}
+
+            return {"ERROR": 'Project Not found in Server!'}
+        else:
+            return {"ERROR": 'Project Not found in Server!'}
+    else:
+        return {"ERROR": 'Unable to Authenticate!'}
+
+
+@app.route('/download', methods=['POST'])
+def download():
+    clientPass = request.json['passCode']
+    projectName = request.json['name']
+    archiveLocation = ""
+
+    if(authenticate(clientPass)):
+        try:
+            projectInfo = json.loads(projectRecord.readRecord())
+        except:
+            projectInfo = None
+            return {"ERROR": 'Project Not found in Server!'}
+        if projectInfo:
+            for project in projectInfo:
+                if project["name"] == projectName:
+                    currentProject = ManageApp(
+                        projectName, project["domain"], project["port"], '')
+                    try:
+                        archiveLocation = currentProject.compress()
+                    except:
+                        return {"ERROR": 'Unable to Compress Project in Server!'}
+
+                    global temp_obj
+                    temp_obj = currentProject
+                    th = threading.Thread(target=waitAndDelete)
+                    th.start()
+
+                    return {"Success": f"{projectName} is Compressed!", "archiveLocation": archiveLocation}
 
             return {"ERROR": 'Project Not found in Server!'}
         else:

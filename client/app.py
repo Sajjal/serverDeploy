@@ -41,6 +41,17 @@ def copyToServer(projectInfo):
         exit()
 
 
+def copyFromServer(remoteLocation, projectName):
+    try:
+        os.system(
+            f'scp -i {setupInfo["sshKey"]} {setupInfo["serverSCPInfo"].split(":")[0]}:{remoteLocation}  {projectLocation}')
+        os.system(f'cd {projectLocation} && tar -xf {projectName}.tar.gz && rm -rf {projectName}.tar.gz')
+    except:
+        print(
+            '\n'+colors.RED + 'ERROR: Server Auth Error; Modify setup.json file with correct info' + colors.ENDC+'\n')
+        exit()
+
+
 def authenticateClient():
     generateConf["passCode"] = getpass.getpass('Server PassCode: ')
     url = f'{setupInfo["serverName"]}/authenticate'
@@ -84,8 +95,8 @@ elif(generateConf and generateConf['type'] == 2):
     if(authenticateClient()):
         projectStatus = checkIfProjectExist()
         if(projectStatus):
-            confirm = input(
-                '\n'+colors.YELLOW + 'WARN: Make Sure your mainFile is still ' + projectStatus + ' Continue? y/n   ' + colors.ENDC)
+            confirm = input('\n' + colors.YELLOW + 'WARN: Make Sure your mainFile is still ' + projectStatus +
+                            ' Continue? y/n   ' + colors.ENDC)
             if (confirm == 'y' or confirm == 'Y'):
                 try:
                     copyToServer(generateConf)
@@ -109,6 +120,33 @@ elif(generateConf and generateConf['type'] == 2):
 
 
 elif(generateConf and generateConf['type'] == 3):
+    if(authenticateClient()):
+        projectStatus = checkIfProjectExist()
+        if(projectStatus):
+            try:
+                url = f'{setupInfo["serverName"]}/download'
+                req = requests.post(url, json=generateConf)
+                archiveLocation = json.loads(req.text)
+                archiveLocation = archiveLocation['archiveLocation']
+            except:
+                print(
+                    '\n'+colors.RED+'ServerError: Unable to communicate with Server!'+colors.ENDC+'\n')
+            try:
+                copyFromServer(archiveLocation, generateConf['name'])
+                print('\n'+generateConf['name'] + ' downloaded successfully! \n')
+            except:
+                print(
+                    '\n'+colors.RED+'ServerError: Unable to download archive via SCP!'+colors.ENDC+'\n')
+
+        else:
+            print('\n'+colors.RED +
+                  'Error: Project not found in Server' + colors.ENDC+'\n')
+
+    else:
+        print('\n'+colors.RED + 'Error: Unable to Authenticate' + colors.ENDC+'\n')
+
+
+elif(generateConf and generateConf['type'] == 4):
     if(authenticateClient()):
         projectStatus = checkIfProjectExist()
         if(projectStatus):
